@@ -1,0 +1,8 @@
+.buttons {
+    max-width: 35%;
+    min-width: 35%;
+}
+
+button {
+    width: 40px;
+}
