@@ -11,9 +11,34 @@ class Game extends React.Component {
         let word = pickWord()
         let length = word.length
         this.state = {
-            correct:0,
+            wrong:0,
             display:Array(length).fill('_'),
-            answer:word,
+            answer:word, //unchange
+        }
+    }
+
+    handleClick = (char) => {
+        console.log('clicked')
+        let arr = []
+        let wrong = this.state.wrong
+        //console.log(char)
+        arr = checkExist(this.state.answer, char)
+        //console.log(arr)
+        if (arr.length !== 0) {
+            let newArr = this.state.display.map((oldChar, index) =>{
+                let returnChar = arr.includes(index) ? char : oldChar
+                return returnChar
+            })
+            //console.log(newArr)
+            this.setState({
+                display: newArr
+            })
+        }
+        else {
+            wrong++
+            this.setState({
+                wrong: wrong
+            })
         }
     }
 
@@ -75,11 +100,11 @@ class Game extends React.Component {
         const alphabets = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
         const drawing = [this.drawHead, this.drawBody, this.drawLeftLeg,this.drawRightLeg,this.drawLeftHand,this.drawRightHand]
         let buttons = alphabets.map((char, index) => {
-            return(<Button value={char} key={index} />)
+            return(<Button value={char} key={index} onClick={() =>this.handleClick(char)} />)
         })
         let display = this.state.display.join(' ')
-        let currentDraw = drawing.slice(0,this.state.correct)
-        //let currentDraw = drawing.slice()
+        let currentDraw = drawing.slice(0,this.state.wrong)
+        console.log(this.state.answer)
         return(
         <div className="main"><div className="buttons">{buttons}</div>
             <div>{display}</div>
@@ -95,5 +120,17 @@ const pickWord = () => {
     let pick = Math.floor(Math.random() * max)
     return WordList.words[pick]
 }
+
+const checkExist = (word, char) => {
+    let indices = []
+    let idx = word.indexOf(char);
+    while (idx !== -1) {
+        indices.push(idx);
+        idx = word.indexOf(char,idx + 1);
+    }
+
+    return indices
+}
+
 
 export default Game
