@@ -5,7 +5,7 @@ import Hangman from "./Hangman.js";
 
 class Game extends React.Component {
 
-
+    //TODO: End game logic
     constructor(props) {
         super(props)
         let word = pickWord()
@@ -14,14 +14,26 @@ class Game extends React.Component {
             wrong:0,
             display:Array(length).fill('_'),
             answer:word, //unchange
+            end:false,
         }
     }
 
-    handleClick = (char) => {
+    handleClick = (char,event) => {
+        let wrong = this.state.wrong
+        
+        if (checkEnd(wrong, this.state.display)){
+            wrong++
+            this.setState({
+                end:true,
+                wrong: wrong,
+            })
+            return
+        }
+        console.log(this.state.end)
         console.log('clicked')
         let arr = []
-        let wrong = this.state.wrong
-        //console.log(char)
+        
+        
         arr = checkExist(this.state.answer, char)
         //console.log(arr)
         if (arr.length !== 0) {
@@ -40,6 +52,9 @@ class Game extends React.Component {
                 wrong: wrong
             })
         }
+        console.log(wrong)
+        event.currentTarget.disabled = true;
+
     }
 
     drawBasic = (ctx) => {
@@ -100,7 +115,7 @@ class Game extends React.Component {
         const alphabets = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
         const drawing = [this.drawHead, this.drawBody, this.drawLeftLeg,this.drawRightLeg,this.drawLeftHand,this.drawRightHand]
         let buttons = alphabets.map((char, index) => {
-            return(<Button value={char} key={index} onClick={() =>this.handleClick(char)} />)
+            return(<Button value={char} key={index} onClick={(event) =>this.handleClick(char,event)} disabled={this.state.end} />)
         })
         let display = this.state.display.join(' ')
         let currentDraw = drawing.slice(0,this.state.wrong)
@@ -108,6 +123,7 @@ class Game extends React.Component {
         return(
         <div className="main"><div className="buttons">{buttons}</div>
             <div>{display}</div>
+            <div>{this.state.end ? 'end' : ''}</div>
             <Hangman drawBasic={this.drawBasic} drawMan={currentDraw} />
         </div>
         )
@@ -132,5 +148,11 @@ const checkExist = (word, char) => {
     return indices
 }
 
+const checkEnd = (wrong, word) => {
+    let result = (wrong >= 5 || (!word.includes('_'))) ? true : false
+    console.log('end: '+result)
+    return result
+
+}
 
 export default Game
