@@ -29,8 +29,8 @@ class Game extends React.Component {
             })
             return
         }
-        console.log(this.state.end)
-        console.log('clicked')
+        //console.log(this.state.end)
+        //console.log('clicked')
         let arr = []
         
         
@@ -52,7 +52,7 @@ class Game extends React.Component {
                 wrong: wrong
             })
         }
-        console.log(wrong)
+        //console.log(wrong)
         event.currentTarget.disabled = true;
 
     }
@@ -119,11 +119,11 @@ class Game extends React.Component {
         })
         let display = this.state.display.join(' ')
         let currentDraw = drawing.slice(0,this.state.wrong)
-        console.log(this.state.answer)
+        //console.log(this.state.answer)
         return(
         <div className="main"><div className="buttons">{buttons}</div>
             <div>{display}</div>
-            <div>{this.state.end ? 'end' : ''}</div>
+            <div>{this.state.end ? 'end, the answer is '+this.state.answer : ''}</div>
             <Hangman drawBasic={this.drawBasic} drawMan={currentDraw} />
         </div>
         )
@@ -150,7 +150,7 @@ const checkExist = (word, char) => {
 
 const checkEnd = (wrong, word) => {
     let result = (wrong >= 5 || (!word.includes('_'))) ? true : false
-    console.log('end: '+result)
+    //console.log('end: '+result)
     return result
 
 }
